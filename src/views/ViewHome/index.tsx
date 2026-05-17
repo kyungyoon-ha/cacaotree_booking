@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import { QuestionSelectWithSvg } from "@components/QuestionSelect";
 import { SVGFlightArrival, SVGFlightDeparture, SVGVan } from "@components/Svg";
 import LayoutQuestion from "@components/LayoutQuestion";
@@ -7,6 +8,7 @@ import styled, { keyframes } from "styled-components";
 
 const ViewHome = () => {
   const { t } = useTranslation("booking");
+  const router = useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -71,6 +73,7 @@ const ViewHome = () => {
   return (
     <LayoutQuestion>
       <QuestionSelectWithSvg
+        key={router.locale}
         buttonName={t("home.button")}
         itemList={itemList}
         title={t("home.title")}
