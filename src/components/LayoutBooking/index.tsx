@@ -77,12 +77,12 @@ const LocaleButtons = styled.div`
 `;
 
 const LocaleButton = styled.button<{ $active: boolean }>`
-  padding: 3px 7px;
+  padding: 6px 12px;
   border-radius: 12px;
   border: 1px solid ${({ $active }) => ($active ? '#EFB041' : '#ddd')};
   background: ${({ $active }) => ($active ? '#EFB041' : 'transparent')};
   color: ${({ $active }) => ($active ? '#fff' : '#aaa')};
-  font-size: 11px;
+  font-size: 13px;
   font-weight: ${({ $active }) => ($active ? 600 : 400)};
   cursor: pointer;
   line-height: 1;
