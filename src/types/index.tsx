@@ -66,6 +66,15 @@ export interface FormLastdayMassageDirect extends FormLastdayMassage {
   phone: string;
 }
 
+export type SnsType = 'kakao' | 'line' | 'whatsapp' | 'wechat' | 'messenger';
+
+export interface FormArrivalMassage extends FormFirstdayMassage {
+  name: string;
+  email: string;
+  snsType: SnsType;
+  snsId: string;
+}
+
 export type FormType =
   | FormDaytimeMassage
   | FormFirstdayMassage
