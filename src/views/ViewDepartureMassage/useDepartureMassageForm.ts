@@ -2,7 +2,7 @@ import { Form, message } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useMutation from 'src/libs/useMutation';
 import { EmailResponse } from 'src/pages/api/CreateLastdayMassage';
 import { FormDepartureMassage } from 'src/types';
@@ -11,6 +11,7 @@ export default function useDepartureMassageForm() {
   const router = useRouter();
   const { t } = useTranslation('booking');
   const [form] = Form.useForm<FormDepartureMassage>();
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [createBooking, { loading, data, error }] =
     useMutation<EmailResponse>('/api/CreateLastdayMassage');
 
@@ -32,6 +33,10 @@ export default function useDepartureMassageForm() {
   };
 
   useEffect(() => {
+    setIsInitialLoading(false);
+  }, []);
+
+  useEffect(() => {
     if (data?.ok) router.push('/cart/success');
   }, [data, router]);
 
@@ -45,5 +50,6 @@ export default function useDepartureMassageForm() {
     onFinishFailed,
     disabledDate,
     isSubmitting: loading,
+    isInitialLoading,
   };
 }
