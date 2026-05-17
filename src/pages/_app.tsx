@@ -7,13 +7,16 @@ import { ConfigProvider } from "antd";
 import { UIProvider } from "src/contexts";
 import { SWRConfig } from "swr";
 import { appWithTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next";
 
 function App({ Component, pageProps }: AppProps) {
+  const { t } = useTranslation();
+
   return (
     <>
       <Head>
         <meta charSet="utf-8" />
-        <title>카카오트리스파 예약폼입니다.</title>
+        <title>{t("app.title")}</title>
       </Head>
       <SWRConfig
         value={{

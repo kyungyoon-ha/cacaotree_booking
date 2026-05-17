@@ -1,4 +1,5 @@
 {
+  "app.title": "Cacaotree Spa Booking Form",
   "title": "Please enter the representative's booking information.",
   "section.airport": "Airport Pickup Information",
   "field.name": "Full Name",
