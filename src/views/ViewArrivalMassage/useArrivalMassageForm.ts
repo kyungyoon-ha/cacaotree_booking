@@ -40,7 +40,8 @@ export default function useArrivalMassageForm() {
     form,
     onFinish,
     onFinishFailed,
-    loading: loading || isLoading,
+    isSubmitting: loading,
+    isLoadingDates: isLoading,
     disabledDate,
   };
 }

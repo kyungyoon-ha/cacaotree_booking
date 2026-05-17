@@ -1,14 +1,20 @@
 import React from "react";
-import LayoutBasic from "@components/LayoutBasic";
+import LayoutBooking from "@components/LayoutBooking";
 
-import theme from "@styles/theme";
 import ViewOrderSuccess from "@views/ViewOrderSuccess";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const SuccessPage = () => {
   return (
-    <LayoutBasic background={theme.gray}>
+    <LayoutBooking>
       <ViewOrderSuccess />
-    </LayoutBasic>
+    </LayoutBooking>
   );
 };
 export default SuccessPage;
+
+export const getStaticProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["booking"])),
+  },
+});

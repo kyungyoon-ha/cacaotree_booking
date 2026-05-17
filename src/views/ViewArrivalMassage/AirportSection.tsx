@@ -4,6 +4,7 @@ import { StyledH1, StyledInput } from '@styles/styledComponents';
 import { Alert, DatePicker, Form, FormInstance } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
+import { useEffect } from 'react';
 
 interface Props {
   form: FormInstance;
@@ -12,6 +13,10 @@ interface Props {
 
 const AirportSection = ({ form, disabledDate }: Props) => {
   const { t } = useTranslation('booking');
+
+  useEffect(() => {
+    form.setFieldValue('pickLocation', t('field.pickupLocationValue'));
+  }, [form, t]);
 
   return (
     <>

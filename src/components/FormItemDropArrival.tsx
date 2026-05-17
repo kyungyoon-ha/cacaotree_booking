@@ -10,16 +10,16 @@ interface Props {
   form: FormInstance;
 }
 
-const DROP_FIXED_VALUES: Record<DropKey, { loc: string; time: string }> = {
-  mactan: { loc: '', time: '11:00 am' },
-  cebu: { loc: '개별 이동하겠습니다.', time: '' },
-  port: { loc: '항구드랍 (1인 200페소 추가)', time: '' },
-  noNeed: { loc: '', time: '' },
-};
-
 const FormItemDropArrival = ({ form }: Props) => {
   const { t } = useTranslation('booking');
   const [selectKey, setSelectKey] = useState<DropKey>('mactan');
+
+  const DROP_FIXED_VALUES: Record<DropKey, { loc: string; time: string }> = useMemo(() => ({
+    mactan: { loc: '', time: '11:00 am' },
+    cebu: { loc: t('drop.fixed.cebu.loc'), time: '' },
+    port: { loc: t('drop.fixed.port.loc'), time: '' },
+    noNeed: { loc: '', time: '' },
+  }), [t]);
 
   const couponList = Form.useWatch('couponList', form);
   const initSelectKey = Form.useWatch('dropLocation_hidden', form);

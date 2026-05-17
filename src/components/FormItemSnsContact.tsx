@@ -7,7 +7,7 @@ import {
 } from '@styles/styledComponents';
 import { SnsType } from 'src/types';
 
-const SNS_OPTIONS: SnsType[] = ['kakao', 'line', 'whatsapp', 'wechat', 'messenger'];
+const SNS_OPTIONS: SnsType[] = ['kakao', 'messenger', 'whatsapp', 'line', 'wechat'];
 
 interface Props {
   form: FormInstance;

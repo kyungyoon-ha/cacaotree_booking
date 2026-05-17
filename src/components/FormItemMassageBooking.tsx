@@ -15,6 +15,15 @@ const FormItemMassageBooking = ({ form, selectOption }: Props) => {
   const fieldPax = Number(Form.useWatch('pax', form)) || 1;
   const fieldMsgList = Form.useWatch('massageList', form) || [];
 
+  const translatedOption = selectOption.map((group) => ({
+    ...group,
+    label: t(group.label as string),
+    options: group.options?.map((opt) => ({
+      ...opt,
+      label: t(opt.label as string),
+    })),
+  }));
+
   useEffect(() => {
     if (fieldPax === fieldMsgList.length) return;
     const initial = { sex: 'f', massage: '' };
@@ -75,7 +84,7 @@ const FormItemMassageBooking = ({ form, selectOption }: Props) => {
                     rules={[{ required: true, message: t('massage.select.error') }]}
                   >
                     <Select
-                      options={selectOption}
+                      options={translatedOption}
                       size="large"
                       placeholder={t('massage.select.placeholder')}
                     />
