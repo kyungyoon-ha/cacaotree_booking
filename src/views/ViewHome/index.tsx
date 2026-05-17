@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import Image from "next/image";
 import { QuestionSelectWithSvg } from "@components/QuestionSelect";
+import { ImageWrapper } from "@components/QuestionSelect/styled";
 import { SVGFlightArrival, SVGFlightDeparture, SVGVan } from "@components/Svg";
 import LayoutQuestion from "@components/LayoutQuestion";
 import styled, { keyframes } from "styled-components";
@@ -37,6 +40,31 @@ const ViewHome = () => {
           <Dot $delay="0.4s" />
         </DotsRow>
       </PageLoadingWrapper>
+    );
+  }
+
+  if (router.locale !== "ko") {
+    const daytimeImages = t("home.daytime.images").split(",").filter(Boolean);
+    return (
+      <DirectBookWrapper>
+        <ButtonRow>
+          <Link href="/booking/daytime-massage" legacyBehavior>
+            <DirectBookButton>{t("home.button")}</DirectBookButton>
+          </Link>
+        </ButtonRow>
+        {daytimeImages.map((src, idx) => (
+          <ImageWrapper key={idx} style={{ position: "relative", width: "100%" }}>
+            <Image
+              className="custom-img"
+              alt=""
+              src={src}
+              layout="fill"
+              objectFit="contain"
+              sizes="100vw"
+            />
+          </ImageWrapper>
+        ))}
+      </DirectBookWrapper>
     );
   }
 
@@ -157,5 +185,43 @@ const Dot = styled.span<{ $delay: string }>`
   display: inline-block;
   animation: ${bounce} 1s ease infinite;
   animation-delay: ${({ $delay }) => $delay};
+`;
+
+const DirectBookWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 60px;
+`;
+
+const ButtonRow = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 40px 0 24px;
+`;
+
+const DirectBookButton = styled.a`
+  display: inline-block;
+  padding: 16px 48px;
+  background: #efb041;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 16px rgba(239, 176, 65, 0.3);
+  transition: background 0.15s, transform 0.1s;
+
+  &:hover {
+    background: #d99e32;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 `;
 
