@@ -1,4 +1,4 @@
-import FormItemPickDrop from '@components/FormItemPickDrop';
+import FormItemDropArrival from '@components/FormItemDropArrival';
 import TimePickerField from '@components/TimePickerField';
 import { StyledH1, StyledInput } from '@styles/styledComponents';
 import { Alert, DatePicker, Form, FormInstance } from 'antd';
@@ -67,81 +67,7 @@ const AirportSection = ({ form, disabledDate }: Props) => {
         <StyledInput disabled size="large" />
       </Form.Item>
 
-      <FormItemPickDrop
-        form={form}
-        keyLocation="dropLocation"
-        keyTime="dropTime"
-        titleLocation="드랍장소"
-        titleTime="드랍시간"
-        options={{
-          mactan: {
-            title: '막탄지역',
-            disabledLoc: false,
-            disabledTime: true,
-            fixedValueLoc: '',
-            fixedValueTime: '11:00 am',
-            helpLoc: (
-              <Alert
-                message="드랍 불가"
-                description="솔레아, 공항근처, 세부시티"
-                type="warning"
-                showIcon
-                style={{ width: '100%', margin: '20px 0' }}
-              />
-            ),
-          },
-          cebu: {
-            title: '세부시티',
-            disabledLoc: true,
-            disabledTime: true,
-            fixedValueLoc: '개별 이동하겠습니다.',
-            fixedValueTime: '',
-            placeholderLoc: '',
-            placeholderTime: '개별 이동하겠습니다.',
-          },
-          port: {
-            title: '항구드랍',
-            disabledLoc: true,
-            disabledTime: false,
-            fixedValueLoc: '항구드랍 (1인 200페소 추가)',
-            fixedValueTime: '',
-            helpTime: (
-              <Alert
-                message="항구 드랍 시간을 적어주세요."
-                description={
-                  <div>
-                    티켓시간 보다 2시간 전에 출발입니다.
-                    <br />
-                    예) 8시 20분 티켓 → 6시 20분
-                  </div>
-                }
-                type="warning"
-                showIcon
-                style={{ width: '100%', margin: '20px 0' }}
-              />
-            ),
-            couponKey: 'dropPort',
-          },
-          noNeed: {
-            title: '필요 없습니다.',
-            disabledLoc: false,
-            disabledTime: true,
-            fixedValueLoc: '',
-            fixedValueTime: '',
-            placeholderLoc: '개별이동 이유를 적어주세요.',
-            placeholderTime: '필요 없습니다.',
-            helpLoc: (
-              <Alert
-                message="개별 이동 사유를 적어주세요."
-                description="투어픽업은 투어종류를 적어주세요."
-                type="warning"
-                showIcon
-                style={{ width: '100%', margin: '20px 0' }}
-              />
-            ),
-          },
-        }}
-      />
+      <FormItemDropArrival form={form} />
     </>
   );
 };

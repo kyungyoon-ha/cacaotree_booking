@@ -1,5 +1,5 @@
-import FormItemMassage from '@components/FormItemMassage';
-import FormItemMemo from '@components/FormItemMemo';
+import FormItemMassageBooking from '@components/FormItemMassageBooking';
+import FormItemMemoBooking from '@components/FormItemMemoBooking';
 import massageFirstday from '@configs/massage-firstday';
 import { FormInstance } from 'antd';
 
@@ -10,8 +10,8 @@ interface Props {
 const MassageSection = ({ form }: Props) => {
   return (
     <>
-      <FormItemMassage form={form} selectOption={massageFirstday} />
-      <FormItemMemo />
+      <FormItemMassageBooking form={form} selectOption={massageFirstday} />
+      <FormItemMemoBooking />
     </>
   );
 };
