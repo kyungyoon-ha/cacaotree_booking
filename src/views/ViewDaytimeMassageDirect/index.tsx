@@ -1,62 +1,226 @@
-import React, { useCallback, useEffect } from "react";
-import LayoutQuestion from "@components/LayoutQuestion";
+import React, { useCallback, useEffect, useState } from "react";
+import { Alert, DatePicker, Form, FormInstance, message } from "antd";
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import {
   StyledButton,
   StyledForm,
   StyledH1,
   StyledInput,
+  StyledRadioButton,
+  StyledRadioGroup,
 } from "@styles/styledComponents";
-import { Form, DatePicker, message, Input, Alert, Spin } from "antd";
-import dayjs from "dayjs";
-import FormItemMassage from "@components/FormItemMassage";
+import FormItemSnsContact from "@components/FormItemSnsContact";
+import FormItemMassageBooking from "@components/FormItemMassageBooking";
+import FormItemMemoBooking from "@components/FormItemMemoBooking";
+import TimePickerField from "@components/TimePickerField";
+import ModalSpin from "@components/ModalSpin";
 import massageDaytime from "@configs/massage-daytime";
-import { FormDaytimeMassage, FormDaytimeMassageDirect } from "@types";
-import { useRouter } from "next/router";
-import { useUIContext } from "src/contexts";
-import FormItemMassageTime from "@components/FormItemMassageTime";
-import FormItemMemo from "@components/FormItemMemo";
-import FormItemPickDrop from "@components/FormItemPickDrop";
-import { EmailResponse } from "src/pages/api/CreateDaytimeMassage";
 import useMutation from "src/libs/useMutation";
-import { SpinWrapper } from "@components/ModalSpin/style";
+import useBlockDates from "src/libs/useBlockDates";
+import { EmailResponse } from "src/pages/api/CreateDaytimeMassage";
+
+type PickKey = "mactan" | "cebu" | "noNeed";
+type DropKey = "mactan" | "cebu" | "noNeed";
+
+const PICK_DISABLED: Record<PickKey, { loc: boolean; time: boolean }> = {
+  mactan: { loc: false, time: false },
+  cebu: { loc: true, time: true },
+  noNeed: { loc: true, time: true },
+};
+
+const DROP_DISABLED: Record<DropKey, { loc: boolean; time: boolean }> = {
+  mactan: { loc: false, time: true },
+  cebu: { loc: true, time: true },
+  noNeed: { loc: true, time: true },
+};
+
+const PickupSection = ({ form }: { form: FormInstance }) => {
+  const { t } = useTranslation("booking");
+  const [selectKey, setSelectKey] = useState<PickKey>("mactan");
+  const initKey = Form.useWatch("pickLocation_hidden", form);
+
+  useEffect(() => {
+    if (initKey) setSelectKey(initKey as PickKey);
+  }, [initKey]);
+
+  const onChangeRadio = (e: any) => {
+    const key = e.target.value as PickKey;
+    const fixedLoc =
+      key === "cebu"
+        ? t("drop.fixed.cebu.loc")
+        : key === "noNeed"
+        ? t("daytime.pick.fixed.noNeed.loc")
+        : "";
+    setSelectKey(key);
+    form.setFieldValue("pickLocation_hidden", key);
+    form.setFieldValue("pickLocation", fixedLoc);
+    form.setFieldValue("pickTime", "");
+  };
+
+  const timePlaceholder =
+    selectKey === "cebu"
+      ? t("drop.fixed.cebu.loc")
+      : selectKey === "noNeed"
+      ? t("daytime.pick.placeholder.noNeed.time")
+      : t("drop.placeholder.time");
+
+  return (
+    <>
+      <StyledH1>{t("daytime.section.pickup")}</StyledH1>
+      <Form.Item name="pickLocation_hidden" initialValue="mactan" hidden>
+        <StyledInput />
+      </Form.Item>
+      <Form.Item style={{ width: "100%", marginBottom: 0 }}>
+        <StyledRadioGroup size="large" onChange={onChangeRadio} value={selectKey}>
+          {(["mactan", "cebu", "noNeed"] as PickKey[]).map((key) => (
+            <StyledRadioButton key={key} value={key}>
+              {t(`drop.tab.${key}`)}
+            </StyledRadioButton>
+          ))}
+        </StyledRadioGroup>
+      </Form.Item>
+      <Form.Item
+        label={t("daytime.field.pickLocation")}
+        name="pickLocation"
+        rules={[{ required: !PICK_DISABLED[selectKey].loc, message: t("drop.error.location") }]}
+        style={{ width: "100%" }}
+      >
+        <StyledInput
+          size="large"
+          placeholder={t("drop.placeholder.location")}
+          disabled={PICK_DISABLED[selectKey].loc}
+        />
+      </Form.Item>
+      <Form.Item
+        label={t("daytime.field.pickTime")}
+        name="pickTime"
+        rules={[{ required: !PICK_DISABLED[selectKey].time, message: t("drop.error.time") }]}
+        style={{ width: "100%" }}
+      >
+        {PICK_DISABLED[selectKey].time ? (
+          <StyledInput size="large" placeholder={timePlaceholder} disabled />
+        ) : (
+          <TimePickerField placeholder={t("drop.placeholder.time")} />
+        )}
+      </Form.Item>
+      <Alert
+        message={t("daytime.alert.pickup.title")}
+        description={t("daytime.alert.pickup.desc")}
+        type="warning"
+        showIcon
+        style={{ width: "100%", margin: "20px 0" }}
+      />
+    </>
+  );
+};
+
+const DropSection = ({ form }: { form: FormInstance }) => {
+  const { t } = useTranslation("booking");
+  const [selectKey, setSelectKey] = useState<DropKey>("mactan");
+  const initKey = Form.useWatch("dropLocation_hidden", form);
+
+  useEffect(() => {
+    if (initKey) setSelectKey(initKey as DropKey);
+  }, [initKey]);
+
+  const onChangeRadio = (e: any) => {
+    const key = e.target.value as DropKey;
+    const fixedLoc =
+      key === "cebu"
+        ? t("drop.fixed.cebu.loc")
+        : key === "noNeed"
+        ? t("daytime.drop.fixed.noNeed.loc")
+        : "";
+    setSelectKey(key);
+    form.setFieldValue("dropLocation_hidden", key);
+    form.setFieldValue("dropLocation", fixedLoc);
+    form.setFieldValue("dropTime", "");
+  };
+
+  const timePlaceholder =
+    selectKey === "mactan"
+      ? t("daytime.drop.placeholder.mactan.time")
+      : selectKey === "cebu"
+      ? t("drop.fixed.cebu.loc")
+      : t("daytime.drop.placeholder.noNeed.time");
+
+  return (
+    <>
+      <StyledH1>{t("daytime.section.drop")}</StyledH1>
+      <Form.Item name="dropLocation_hidden" initialValue="mactan" hidden>
+        <StyledInput />
+      </Form.Item>
+      <Form.Item style={{ width: "100%", marginBottom: 0 }}>
+        <StyledRadioGroup size="large" onChange={onChangeRadio} value={selectKey}>
+          {(["mactan", "cebu", "noNeed"] as DropKey[]).map((key) => (
+            <StyledRadioButton key={key} value={key}>
+              {t(`drop.tab.${key}`)}
+            </StyledRadioButton>
+          ))}
+        </StyledRadioGroup>
+      </Form.Item>
+      <Form.Item
+        label={t("drop.location.label")}
+        name="dropLocation"
+        rules={[{ required: !DROP_DISABLED[selectKey].loc, message: t("drop.error.location") }]}
+        style={{ width: "100%" }}
+      >
+        <StyledInput
+          size="large"
+          placeholder={t("drop.placeholder.location")}
+          disabled={DROP_DISABLED[selectKey].loc}
+        />
+      </Form.Item>
+      <Form.Item
+        label={t("drop.time.label")}
+        name="dropTime"
+        rules={[{ required: !DROP_DISABLED[selectKey].time, message: t("drop.error.time") }]}
+        style={{ width: "100%" }}
+      >
+        <StyledInput size="large" placeholder={timePlaceholder} disabled />
+      </Form.Item>
+      <Alert
+        message={t("daytime.alert.drop.title")}
+        description={t("daytime.alert.drop.desc")}
+        type="warning"
+        showIcon
+        style={{ width: "100%", margin: "20px 0" }}
+      />
+    </>
+  );
+};
 
 const ViewDaytimeMassageDirect = () => {
   const router = useRouter();
-  const [form] = Form.useForm<FormDaytimeMassage>();
+  const { t } = useTranslation("booking");
+  const [form] = Form.useForm();
+  const { disabledDate } = useBlockDates("daytime");
 
   const [createDaytimeMassage, { loading, data, error }] =
     useMutation<EmailResponse>("/api/CreateDaytimeMassage");
 
-  const onFinish = (values: FormDaytimeMassageDirect) => {
-    createDaytimeMassage(values);
+  const onFinish = (values: any) => {
+    const phone = `${values.snsType}: ${values.snsId}`;
+    createDaytimeMassage({ ...values, phone });
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    let errorMessage = "잠시후에 다시 시도해주세요.";
-    if (errorInfo?.errorFields.length) {
-      errorMessage = errorInfo.errorFields[0]?.errors[0];
-    }
-    message.error(errorMessage);
+    const msg = errorInfo?.errorFields?.[0]?.errors?.[0] ?? t("error.retry");
+    message.error(msg);
   };
 
-  const disabledDate = useCallback((current): boolean => {
-    return dayjs().add(-1, "days") >= current;
-  }, []);
-
   useEffect(() => {
-    if (data?.ok) {
-      router.push("/cart/success");
-    }
+    if (data?.ok) router.push("/cart/success");
   }, [data, router]);
 
   useEffect(() => {
-    if (error) {
-      message.error("잠시후에 다시 시도해주세요. 문의: cacaotreespa");
-    }
-  }, [error]);
+    if (error) message.error(t("error.retry"));
+  }, [error, t]);
 
   return (
-    <LayoutQuestion>
+    <>
+      <ModalSpin loading={loading} title={t("loading.title")} description={t("loading.desc")} />
       <StyledForm
         form={form}
         layout="vertical"
@@ -64,183 +228,73 @@ const ViewDaytimeMassageDirect = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
         requiredMark={false}
-        scrollToFirstError={true}
+        scrollToFirstError
       >
-        <StyledH1>대표 예약자 정보를 입력해주세요.</StyledH1>
+        <Form.Item name="package" hidden initialValue="[2] Daytime" />
+        <Form.List name="couponList" initialValue={[]}>
+          {() => null}
+        </Form.List>
+
+        <StyledH1>{t("title")}</StyledH1>
         <Form.Item
-          label="예약자 성함"
+          label={t("field.name")}
           name="name"
-          rules={[{ required: true, message: "예약자 성함을 입력해주세요." }]}
+          rules={[{ required: true, message: t("error.name") }]}
           style={{ width: "100%" }}
         >
-          <StyledInput placeholder="예약자 성함을 입력해주세요." />
+          <StyledInput placeholder={t("placeholder.name")} size="large" />
         </Form.Item>
-
         <Form.Item
+          label={t("field.email")}
           name="email"
-          label="이메일"
           style={{ width: "100%" }}
           rules={[
-            {
-              type: "email",
-              message: "이메일 형식으로 입력해주세요.",
-            },
-            {
-              required: true,
-              message: "이메일을 입력해주세요.",
-            },
+            { type: "email", message: t("error.emailFormat") },
+            { required: true, message: t("error.email") },
           ]}
         >
-          <StyledInput placeholder="이메일을 입력해주세요." />
+          <StyledInput placeholder={t("placeholder.email")} size="large" />
         </Form.Item>
+        <FormItemSnsContact form={form} />
 
+        <StyledH1>{t("daytime.section.date")}</StyledH1>
         <Form.Item
-          name="phone"
-          label="연락처"
-          style={{ width: "100%" }}
-          rules={[{ required: true, message: "연락처를 입력해주세요." }]}
-        >
-          <StyledInput placeholder="연락처를 입력해주세요." />
-        </Form.Item>
-
-        <StyledH1>이용날짜를 선택해주세요.</StyledH1>
-        <Form.Item name="package" hidden initialValue="[2] Daytime" />
-
-        <Form.Item label="쿠폰 목록" required hidden>
-          <Form.List name="couponList" initialValue={[]}>
-            {(fields) => (
-              <>
-                {fields.map((field) => (
-                  <Form.Item {...field} key={field.key}>
-                    <Input />
-                  </Form.Item>
-                ))}
-              </>
-            )}
-          </Form.List>
-        </Form.Item>
-
-        <Form.Item
-          label="이용날짜"
+          label={t("field.date")}
           name="date"
-          rules={[{ required: true, message: "이용날짜를 선택해주세요." }]}
+          rules={[{ required: true, message: t("error.date") }]}
           style={{ width: "100%" }}
-          // initialValue={dayjs().add(1, "days")}
-          // extra="당일 예약은 카톡으로 문의주세요."
         >
           <DatePicker
-            format={"YYYY-MM-DD"}
-            placeholder="이용날짜를 선택해주세요."
+            format="YYYY-MM-DD"
+            placeholder={t("error.date")}
             className="ant-input"
-            style={{ height: "60px", borderRadius: "10px" }}
+            style={{ width: "100%", height: "60px", borderRadius: "10px" }}
             disabledDate={disabledDate}
           />
         </Form.Item>
-        <FormItemMassage form={form} selectOption={massageDaytime} />
-        <StyledH1 style={{ textAlign: "center" }}>
-          픽업 장소를 적어주세요.
-        </StyledH1>
-        <FormItemPickDrop
-          form={form}
-          keyLocation="pickLocation"
-          keyTime="pickTime"
-          titleLocation="픽업 장소"
-          titleTime="픽업 시간"
-          options={{
-            mactan: {
-              title: "막탄지역",
-              disabledLoc: false,
-              disabledTime: false,
-              fixedValueLoc: "",
-              fixedValueTime: "",
-            },
-            cebu: {
-              title: "세부시티",
-              disabledLoc: true,
-              disabledTime: true,
-              fixedValueLoc: "개별 이동하겠습니다.",
-              fixedValueTime: "",
-              placeholderLoc: "",
-              placeholderTime: "개별 이동하겠습니다.",
-            },
-            noNeed: {
-              title: "필요 없습니다.",
-              disabledLoc: true,
-              disabledTime: true,
-              fixedValueLoc: "픽업 필요 없습니다.",
-              fixedValueTime: "",
-              placeholderLoc: "",
-              placeholderTime: "픽업 필요 없습니다.",
-            },
-          }}
-        />
-        <Alert
-          message="픽업 안내"
-          description="공항 픽업은 첫날팩을 이용해주세요."
-          type="warning"
-          showIcon
-          style={{ width: "100%", margin: "20px 0" }}
-        />
-        <FormItemMassageTime />
-        <StyledH1 style={{ textAlign: "center" }}>
-          드랍 장소를 적어주세요.
-        </StyledH1>
-        <FormItemPickDrop
-          form={form}
-          keyLocation="dropLocation"
-          keyTime="dropTime"
-          titleLocation="드랍 장소"
-          titleTime="드랍 시간"
-          options={{
-            mactan: {
-              title: "막탄지역",
-              disabledLoc: false,
-              disabledTime: true,
-              fixedValueLoc: "",
-              fixedValueTime: "",
-              placeholderLoc: "",
-              placeholderTime: "마사지 후 드랍하겠습니다.",
-            },
-            cebu: {
-              title: "세부시티",
-              disabledLoc: true,
-              disabledTime: true,
-              fixedValueLoc: "개별 이동하겠습니다.",
-              fixedValueTime: "",
-              placeholderLoc: "",
-              placeholderTime: "개별 이동하겠습니다.",
-            },
-            noNeed: {
-              title: "필요 없습니다.",
-              disabledLoc: true,
-              disabledTime: true,
-              fixedValueLoc: "필요 없습니다.",
-              fixedValueTime: "",
-              placeholderLoc: "",
-              placeholderTime: "필요 없습니다.",
-            },
-          }}
-        />
-        <Alert
-          message="드랍 안내"
-          description="공항 드랍은 막날팩을 이용해주세요."
-          type="warning"
-          showIcon
-          style={{ width: "100%", margin: "20px 0" }}
-        />
-        <FormItemMemo />
 
-        {loading ? (
-          <SpinWrapper>
-            <Spin />
-          </SpinWrapper>
-        ) : (
-          <StyledButton type="primary" htmlType="submit">
-            작성 완료
-          </StyledButton>
-        )}
+        <FormItemMassageBooking form={form} selectOption={massageDaytime} />
+
+        <StyledH1 style={{ textAlign: "center" }}>{t("daytime.section.massageTime")}</StyledH1>
+        <Form.Item
+          label={t("daytime.field.massageTime")}
+          name="massageTime"
+          rules={[{ required: true, message: t("daytime.error.massageTime") }]}
+          style={{ width: "100%" }}
+        >
+          <TimePickerField placeholder={t("daytime.placeholder.massageTime")} />
+        </Form.Item>
+
+        <PickupSection form={form} />
+        <DropSection form={form} />
+
+        <FormItemMemoBooking />
+
+        <StyledButton type="primary" htmlType="submit" disabled={loading}>
+          {t("submit")}
+        </StyledButton>
       </StyledForm>
-    </LayoutQuestion>
+    </>
   );
 };
 

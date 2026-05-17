@@ -51,7 +51,8 @@ export interface FormLastdayHopping extends FormLastdayMassage {
 export interface FormDaytimeMassageDirect extends FormBasicMassage {
   name: string;
   email: string;
-  phone: string;
+  snsType: SnsType;
+  snsId: string;
 }
 
 export interface FormFirstdayMassageDirect extends FormFirstdayMassage {
