@@ -18,7 +18,7 @@ export default function useArrivalMassageForm() {
 
   const onFinish = (values: FormArrivalMassage) => {
     const phone = `${values.snsType}: ${values.snsId}`;
-    const pickTime = dayjs(values.pickTime).format('HH:mm A');
+    const pickTime = (values.pickTime as unknown as dayjs.Dayjs).format('HH:mm A');
     createBooking({ ...values, phone, pickTime });
   };
 

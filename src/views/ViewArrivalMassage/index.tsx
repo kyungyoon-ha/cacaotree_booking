@@ -32,9 +32,7 @@ const ViewArrivalMassage = () => {
       scrollToFirstError
     >
       <Form.Item name="package" hidden initialValue="[1] Airport Pick" />
-      <Form.List name="couponList" initialValue={[]}>
-        {() => null}
-      </Form.List>
+      <Form.Item name="couponList" hidden initialValue={[]} />
 
       <ContactSection form={form} />
       <AirportSection form={form} disabledDate={disabledDate} />

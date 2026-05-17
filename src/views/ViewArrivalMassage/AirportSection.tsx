@@ -25,7 +25,7 @@ const AirportSection = ({ form, disabledDate }: Props) => {
       >
         <DatePicker
           format="YYYY-MM-DD"
-          placeholder={t('error.date')}
+          placeholder={t('field.date')}
           className="ant-input"
           style={{ width: '100%', height: '60px', borderRadius: '10px' }}
           disabledDate={disabledDate}

@@ -9,9 +9,9 @@ export default function useBlockDates(type: BlockDateType) {
   const [blockDates, setBlockDates] = useState<BlockDates | null>(null);
 
   useEffect(() => {
-    axios.get('/api/GetBlockDate').then((res) => {
-      setBlockDates(res.data.data);
-    });
+    axios.get('/api/GetBlockDate')
+      .then((res) => setBlockDates(res.data.data))
+      .catch(() => setBlockDates({ blockDatesFirstday: [], blockDatesDaytime: [] }));
   }, []);
 
   const disabledDate = useCallback(
