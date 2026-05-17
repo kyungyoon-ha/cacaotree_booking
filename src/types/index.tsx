@@ -75,6 +75,24 @@ export interface FormArrivalMassage extends FormFirstdayMassage {
   snsId: string;
 }
 
+export interface FormDepartureMassage {
+  package: string;
+  name: string;
+  email: string;
+  snsType: SnsType;
+  snsId: string;
+  date: Date;
+  pax: number;
+  pickTime: Date;       // 호텔 픽업 시간
+  pickLocation: string; // 호텔/숙소명
+  massageTime: Date;    // 마사지 시작 시간
+  dropTime: Date;       // 공항 출발 시간
+  dropLocation: string; // 고정값: "막탄공항"
+  massageList: Massage[];
+  couponList: string[];
+  memo: string;
+}
+
 export type FormType =
   | FormDaytimeMassage
   | FormFirstdayMassage
