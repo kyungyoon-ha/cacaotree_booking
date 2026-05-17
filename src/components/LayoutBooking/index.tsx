@@ -2,14 +2,13 @@ import Logo from '@components/Logo';
 import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
-import { SCREENS } from '@configs/screens';
 
 const LOCALES = [
-  { code: 'ko', label: '한국어' },
+  { code: 'ko', label: '한' },
   { code: 'en', label: 'EN' },
-  { code: 'ja', label: '日本語' },
-  { code: 'zh-Hans', label: '简体' },
-  { code: 'zh-Hant', label: '繁體' },
+  { code: 'ja', label: '日' },
+  { code: 'zh-Hans', label: '简' },
+  { code: 'zh-Hant', label: '繁' },
 ];
 
 const BookingHeader = () => {
@@ -21,7 +20,7 @@ const BookingHeader = () => {
 
   return (
     <Header>
-      <Logo width="40" height="40" href="/" />
+      <Logo width="50" height="50" href="/" />
       <LocaleButtons>
         {LOCALES.map(({ code, label }) => (
           <LocaleButton
@@ -70,10 +69,6 @@ const Header = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
-
-  @media (max-width: ${SCREENS.sm}) {
-    padding: 0 16px;
-  }
 `;
 
 const LocaleButtons = styled.div`
@@ -82,23 +77,20 @@ const LocaleButtons = styled.div`
 `;
 
 const LocaleButton = styled.button<{ $active: boolean }>`
-  padding: 4px 10px;
-  border: 1px solid ${({ $active }) => ($active ? '#EFB041' : '#d9d9d9')};
-  border-radius: 6px;
+  padding: 3px 7px;
+  border-radius: 12px;
+  border: 1px solid ${({ $active }) => ($active ? '#EFB041' : '#ddd')};
   background: ${({ $active }) => ($active ? '#EFB041' : 'transparent')};
-  color: ${({ $active }) => ($active ? '#fff' : '#555')};
-  font-size: 12px;
+  color: ${({ $active }) => ($active ? '#fff' : '#aaa')};
+  font-size: 11px;
+  font-weight: ${({ $active }) => ($active ? 600 : 400)};
   cursor: pointer;
-  font-weight: ${({ $active }) => ($active ? 'bold' : 'normal')};
+  line-height: 1;
+  transition: all 0.15s;
 
   &:hover {
     border-color: #EFB041;
-    color: #EFB041;
-  }
-
-  @media (max-width: ${SCREENS.sm}) {
-    padding: 4px 6px;
-    font-size: 11px;
+    color: ${({ $active }) => ($active ? '#fff' : '#EFB041')};
   }
 `;
 
