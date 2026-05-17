@@ -1,6 +1,4 @@
 import Logo from "@components/Logo";
-import productMap from "@configs/productMap";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
@@ -24,14 +22,6 @@ const Header = () => {
   return (
     <Wrapper>
       <Logo width="50" height="50" href="/" />
-
-      <Title>
-        <Link href="/">
-          {pageKey && productMap[pageKey]?.alt
-            ? productMap[pageKey]?.alt
-            : "마사지 예약하기"}
-        </Link>
-      </Title>
 
       <LocaleRow>
         {LOCALES.map(({ code, label }) => (
@@ -63,11 +53,6 @@ const Wrapper = styled.div`
   top: 0;
   width: 100%;
   z-index: 10 !important;
-`;
-
-const Title = styled.p`
-  font-family: "Noto Serif KR", serif;
-  text-align: center;
 `;
 
 const LocaleRow = styled.div`
