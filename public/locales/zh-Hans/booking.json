@@ -1,5 +1,5 @@
 {
-  "app.title": "可可树水疗预约表",
+  "appTitle": "可可树水疗预约表",
   "title": "请输入代表预订人信息。",
   "section.airport": "请输入机场接送信息。",
   "field.name": "姓名",

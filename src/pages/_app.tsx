@@ -16,7 +16,7 @@ function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <meta charSet="utf-8" />
-        <title>{t("app.title")}</title>
+        <title>{t("appTitle")}</title>
       </Head>
       <SWRConfig
         value={{
