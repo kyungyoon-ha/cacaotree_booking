@@ -78,8 +78,14 @@ public/locales/
 ```
 
 ### 언어 선택 UI
-- 페이지 상단 고정 버튼 그룹: `한국어 | English | 日本語 | 简体 | 繁體`
-- 선택 시 해당 locale URL로 router.push
+- 기존 `Header`/`LayoutBasic` 변경 없음
+- `/booking/*` 전용 `LayoutBooking` 레이아웃 신규 생성
+- `LayoutBooking`은 `BookingHeader`를 포함하며, 우측에 언어 전환 버튼 표시
+  ```
+  [로고]  Cacaotree Spa  [한 | EN | 日 | 简 | 繁]
+  ```
+- 언어 버튼 클릭 시 `router.push({ pathname, locale })` 로 전환
+- 현재 선택된 언어는 강조 표시
 
 ---
 
@@ -159,16 +165,39 @@ useArrivalMassageForm()
 
 ## 7. 컴포넌트 신규 생성
 
-### `src/components/TimePickerField/index.tsx`
-- Ant Design `TimePicker` 래퍼
-- `format="HH:mm"`, `minuteStep={10}`
-- Ant Design Form과 호환 (`value`, `onChange` props)
-- 다국어 placeholder 지원
+### 파일 명명 규칙
+- `index.tsx` 없이 파일명 직접 사용: `TimePickerField.tsx`, `FormItemSnsContact.tsx`
+- styled-components는 별도 파일 없이 해당 컴포넌트 파일 하단에 정의
+- 각 컴포넌트 파일은 한눈에 읽힐 수 있도록 짧게 유지
 
-### `src/components/FormItemSnsContact/index.tsx`
-- SNS 타입 Radio 선택 + 아이디 입력 통합
-- snsType 변경 시 placeholder 자동 업데이트
+### `src/components/TimePickerField.tsx`
+- Ant Design `TimePicker` 래퍼
+- `format="HH:mm"`, `minuteStep={10}`, 스크롤 휠 방식
+- Ant Design Form 호환 (`value`, `onChange` props)
+
+### `src/components/FormItemSnsContact.tsx`
+- SNS Radio 선택 + 아이디 입력 통합 (두 Form.Item)
+- snsType Watch → placeholder 동적 변경
 - i18n 텍스트 지원
+
+### `src/components/LayoutBooking/index.tsx`
+- `/booking/*` 전용 레이아웃
+- `BookingHeader` (로고 + 언어 전환 버튼) 포함
+- 기존 `LayoutBasic` 영향 없음
+
+### ViewArrivalMassage 컴포넌트 분리
+뷰를 섹션 단위로 쪼개서 각 파일이 짧고 명확하게 유지:
+
+```
+src/views/ViewArrivalMassage/
+  index.tsx              ← 섹션 조합 + 폼 wrapper만
+  ContactSection.tsx     ← name, email, SNS 연락처
+  AirportSection.tsx     ← 날짜, 도착시간, 항공편, 픽업/드랍
+  MassageSection.tsx     ← 마사지 선택
+  useArrivalMassageForm.ts
+```
+
+styled-components는 각 파일 하단에 포함 (별도 styled.tsx 없음)
 
 ---
 
@@ -178,10 +207,13 @@ useArrivalMassageForm()
 신규 생성:
   src/pages/booking/arrival-massage.tsx
   src/views/ViewArrivalMassage/index.tsx
+  src/views/ViewArrivalMassage/ContactSection.tsx
+  src/views/ViewArrivalMassage/AirportSection.tsx
+  src/views/ViewArrivalMassage/MassageSection.tsx
   src/views/ViewArrivalMassage/useArrivalMassageForm.ts
-  src/views/ViewArrivalMassage/styled.tsx
-  src/components/TimePickerField/index.tsx
-  src/components/FormItemSnsContact/index.tsx
+  src/components/TimePickerField.tsx
+  src/components/FormItemSnsContact.tsx
+  src/components/LayoutBooking/index.tsx        ← BookingHeader 포함
   src/libs/useBlockDates.ts
   public/locales/ko/booking.json
   public/locales/en/booking.json
