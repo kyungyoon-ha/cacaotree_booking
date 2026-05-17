@@ -9,6 +9,7 @@
   "field.arrivalTime": "到着時間",
   "field.flight": "フライト番号",
   "field.pickupLocation": "ピックアップ場所",
+  "field.pickupLocationValue": "マクタン空港",
   "sns.kakao": "KakaoTalk",
   "sns.line": "LINE",
   "sns.whatsapp": "WhatsApp",

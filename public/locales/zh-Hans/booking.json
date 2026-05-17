@@ -9,6 +9,7 @@
   "field.arrivalTime": "到达时间",
   "field.flight": "航班号",
   "field.pickupLocation": "接机地点",
+  "field.pickupLocationValue": "麦克坦机场",
   "sns.kakao": "KakaoTalk",
   "sns.line": "LINE",
   "sns.whatsapp": "WhatsApp",

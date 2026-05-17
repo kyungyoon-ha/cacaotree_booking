@@ -61,7 +61,7 @@ const AirportSection = ({ form, disabledDate }: Props) => {
       <Form.Item
         label={t('field.pickupLocation')}
         name="pickLocation"
-        initialValue="막탄공항"
+        initialValue={t('field.pickupLocationValue')}
         style={{ width: '100%' }}
       >
         <StyledInput disabled size="large" />

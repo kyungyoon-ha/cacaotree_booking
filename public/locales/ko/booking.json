@@ -9,6 +9,7 @@
   "field.arrivalTime": "도착 시간",
   "field.flight": "항공기 편명",
   "field.pickupLocation": "픽업 장소",
+  "field.pickupLocationValue": "막탄공항",
   "sns.kakao": "KakaoTalk",
   "sns.line": "LINE",
   "sns.whatsapp": "WhatsApp",

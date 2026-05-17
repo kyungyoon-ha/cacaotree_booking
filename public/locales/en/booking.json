@@ -9,6 +9,7 @@
   "field.arrivalTime": "Arrival Time",
   "field.flight": "Flight Number",
   "field.pickupLocation": "Pickup Location",
+  "field.pickupLocationValue": "Mactan Airport",
   "sns.kakao": "KakaoTalk",
   "sns.line": "LINE",
   "sns.whatsapp": "WhatsApp",

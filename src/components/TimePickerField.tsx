@@ -19,6 +19,7 @@ const TimePickerField = ({ value, onChange, placeholder, disabled }: Props) => (
     size="large"
     disabled={disabled}
     showNow={false}
+    needConfirm={false}
     inputReadOnly
   />
 );
