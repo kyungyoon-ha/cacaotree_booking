@@ -1,13 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import { QuestionSelectWithSvg } from "@components/QuestionSelect";
 import { SVGFlightArrival, SVGFlightDeparture, SVGVan } from "@components/Svg";
 import LayoutQuestion from "@components/LayoutQuestion";
 import styled, { keyframes } from "styled-components";
 
+const LOCALES = [
+  { code: "ko", label: "한국어" },
+  { code: "en", label: "EN" },
+  { code: "ja", label: "日本語" },
+  { code: "zh-Hans", label: "简中" },
+  { code: "zh-Hant", label: "繁中" },
+];
+
 const ViewHome = () => {
   const { t } = useTranslation("booking");
+  const router = useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const changeLocale = (locale: string) => {
+    router.push({ pathname: router.pathname, query: router.query }, router.asPath, { locale });
+  };
 
   useEffect(() => {
     setIsLoaded(true);
@@ -70,6 +84,17 @@ const ViewHome = () => {
 
   return (
     <LayoutQuestion>
+      <LocaleRow>
+        {LOCALES.map(({ code, label }) => (
+          <LocaleButton
+            key={code}
+            $active={router.locale === code}
+            onClick={() => changeLocale(code)}
+          >
+            {label}
+          </LocaleButton>
+        ))}
+      </LocaleRow>
       <QuestionSelectWithSvg
         buttonName={t("home.button")}
         itemList={itemList}
@@ -154,4 +179,28 @@ const Dot = styled.span<{ $delay: string }>`
   display: inline-block;
   animation: ${bounce} 1s ease infinite;
   animation-delay: ${({ $delay }) => $delay};
+`;
+
+const LocaleRow = styled.div`
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  padding: 12px 0 4px;
+`;
+
+const LocaleButton = styled.button<{ $active: boolean }>`
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid ${({ $active }) => ($active ? "#EFB041" : "#ddd")};
+  background: ${({ $active }) => ($active ? "#EFB041" : "#fff")};
+  color: ${({ $active }) => ($active ? "#fff" : "#888")};
+  font-size: 12px;
+  font-weight: ${({ $active }) => ($active ? 600 : 400)};
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: #EFB041;
+    color: ${({ $active }) => ($active ? "#fff" : "#EFB041")};
+  }
 `;
