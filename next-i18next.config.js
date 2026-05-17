@@ -4,4 +4,6 @@ module.exports = {
     defaultLocale: 'ko',
     locales: ['ko', 'en', 'ja', 'zh-Hans', 'zh-Hant'],
   },
+  defaultNS: 'booking',
+  ns: ['booking'],
 };
