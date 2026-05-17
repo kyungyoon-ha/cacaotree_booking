@@ -1,11 +1,8 @@
 import Logo from "@components/Logo";
 import productMap from "@configs/productMap";
-import { Badge, Tooltip } from "antd";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-import { useUIContext } from "src/contexts";
+import React from "react";
 import styled from "styled-components";
 
 const LOCALES = [
@@ -18,23 +15,11 @@ const LOCALES = [
 
 const Header = () => {
   const router = useRouter();
-  const {
-    carts: {
-      summary: { totalItemCnt },
-    },
-    getCartsAll,
-    dispatch,
-  } = useUIContext();
-
-  let pageKey = router.pathname.split("/")[2];
+  const pageKey = router.pathname.split("/")[2];
 
   const changeLocale = (locale: string) => {
     router.push({ pathname: router.pathname, query: router.query }, router.asPath, { locale });
   };
-
-  useEffect(() => {
-    getCartsAll({}, dispatch);
-  }, [getCartsAll, dispatch]);
 
   return (
     <Wrapper>
@@ -48,45 +33,17 @@ const Header = () => {
         </Link>
       </Title>
 
-      <RightSection>
-        <LocaleRow>
-          {LOCALES.map(({ code, label }) => (
-            <LocaleButton
-              key={code}
-              $active={router.locale === code}
-              onClick={() => changeLocale(code)}
-            >
-              {label}
-            </LocaleButton>
-          ))}
-        </LocaleRow>
-        <StyledLink
-          href="https://pf.kakao.com/_mRQxbT"
-          target="_blank"
-          style={{ marginRight: "10px" }}
-        >
-          <Tooltip title="문의하기">
-            <Image
-              src="/message.svg"
-              alt="shopping icon"
-              width="25"
-              height="25"
-            />
-          </Tooltip>
-        </StyledLink>
-        <StyledLink href="/cart">
-          <Tooltip title="장바구니">
-            <Badge count={totalItemCnt} size="small">
-              <Image
-                src="/shopping-cart.svg"
-                alt="shopping icon"
-                width="25"
-                height="25"
-              />
-            </Badge>
-          </Tooltip>
-        </StyledLink>
-      </RightSection>
+      <LocaleRow>
+        {LOCALES.map(({ code, label }) => (
+          <LocaleButton
+            key={code}
+            $active={router.locale === code}
+            onClick={() => changeLocale(code)}
+          >
+            {label}
+          </LocaleButton>
+        ))}
+      </LocaleRow>
     </Wrapper>
   );
 };
@@ -113,16 +70,9 @@ const Title = styled.p`
   text-align: center;
 `;
 
-const RightSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`;
-
 const LocaleRow = styled.div`
   display: flex;
   gap: 3px;
-  margin-right: 8px;
 `;
 
 const LocaleButton = styled.button<{ $active: boolean }>`
@@ -143,10 +93,3 @@ const LocaleButton = styled.button<{ $active: boolean }>`
   }
 `;
 
-const StyledLink = styled(Link)`
-  margin-left: 6px;
-  img:hover {
-    transform: scale(1.1);
-    transition: 0.4s;
-  }
-`;
