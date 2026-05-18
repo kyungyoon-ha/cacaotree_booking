@@ -47,6 +47,8 @@ const ViewHome = () => {
     const daytimeImages = t("home.daytime.images").split(",").filter(Boolean);
     return (
       <DirectBookWrapper>
+        <IntroTitle>{t("home.intro.title")}</IntroTitle>
+        <IntroDesc>{t("home.intro.desc")}</IntroDesc>
         <ButtonRow>
           <Link href="/booking/daytime-massage" legacyBehavior>
             <DirectBookButton>{t("home.button")}</DirectBookButton>
@@ -191,8 +193,33 @@ const DirectBookWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 700px;
+  margin: 0 auto;
+  padding-top: 60px;
   padding-bottom: 60px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 40px 20px 60px;
+    min-width: 354px;
+  }
+`;
+
+const IntroTitle = styled.h1`
+  font-family: "Noto Serif KR", serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 12px;
+  text-align: center;
+`;
+
+const IntroDesc = styled.p`
+  font-size: 15px;
+  color: #777;
+  text-align: center;
+  margin: 0;
+  line-height: 1.6;
 `;
 
 const ButtonRow = styled.div`
