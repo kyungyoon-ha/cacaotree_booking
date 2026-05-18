@@ -1,17 +1,14 @@
-import React from "react";
 import LayoutBooking from "@components/LayoutBooking";
-
-import ViewOrderSuccess from "@views/ViewOrderSuccess";
+import ViewDaytimeMassageDirect from "@views/ViewDaytimeMassageDirect";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-const SuccessPage = () => {
-  return (
-    <LayoutBooking>
-      <ViewOrderSuccess />
-    </LayoutBooking>
-  );
-};
-export default SuccessPage;
+const DaytimeMassage = () => (
+  <LayoutBooking>
+    <ViewDaytimeMassageDirect />
+  </LayoutBooking>
+);
+
+export default DaytimeMassage;
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {

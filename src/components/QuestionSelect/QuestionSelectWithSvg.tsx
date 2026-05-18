@@ -13,14 +13,10 @@ const QuestionSelectWithSvg = ({
   buttonName,
 }: QuestionSelectWithSvgProps) => {
   const router = useRouter();
-  const [selectItem, setSelectItem] = useState(itemList[0]);
+  const [selectItemId, setSelectItemId] = useState(itemList[0]?.id);
+  const selectItem = itemList.find((item) => item.id === selectItemId) ?? itemList[0];
 
-  const onChangeSelectItem = (item) => setSelectItem(item);
-
-  const onClickItem = (id) => () => {
-    const seleced = itemList.find((item) => item.id === id);
-    onChangeSelectItem(seleced);
-  };
+  const onClickItem = (id) => () => setSelectItemId(id);
 
   const onClickButton = () => {
     if (!selectItem) return;

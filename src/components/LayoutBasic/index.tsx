@@ -30,5 +30,5 @@ type Props2 = {
 const Wrapper = styled.div<Props2>`
   background: ${(props) => props.background};
   margin-top: 50px;
-  height: calc(100vh - 70px);
+  min-height: calc(100vh - 70px);
 `;

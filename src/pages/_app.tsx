@@ -2,18 +2,21 @@ import { ThemeProvider } from "styled-components";
 import GlobalStyles from "../styles/GlobalStyles";
 import theme from "../styles/theme";
 import Head from "next/head";
-
 import type { AppProps } from "next/app";
 import { ConfigProvider } from "antd";
 import { UIProvider } from "src/contexts";
 import { SWRConfig } from "swr";
+import { appWithTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next";
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
+  const { t } = useTranslation();
+
   return (
     <>
       <Head>
         <meta charSet="utf-8" />
-        <title>카카오트리스파 예약폼입니다.</title>
+        <title>{t("appTitle")}</title>
       </Head>
       <SWRConfig
         value={{
@@ -39,3 +42,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </>
   );
 }
+
+export default appWithTranslation(App);
